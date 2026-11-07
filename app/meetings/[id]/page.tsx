@@ -55,10 +55,7 @@ async function MeetingContent({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2 text-sm print:hidden">
-        <Link href="/meetings" className="underline">
-          ← All meetings
-        </Link>
+      <div className="flex items-center justify-end gap-2 text-sm print:hidden">
         <div className="flex gap-2">
           <Link
             href={printMode ? `/meetings/${meeting.id}` : `/meetings/${meeting.id}?print=1`}

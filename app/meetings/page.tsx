@@ -27,7 +27,7 @@ async function MeetingList() {
 export default function MeetingsPage() {
   return (
     <>
-      <h1 className="text-2xl font-semibold">All Meetings</h1>
+      <h1 className="text-center text-2xl font-semibold">All Meetings</h1>
       {/* The API fetch happens per request, so it streams in behind the loading skeleton. */}
       <Suspense fallback={<Loading />}>
         <MeetingList />
