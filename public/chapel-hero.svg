@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f3a5f"/>
+      <stop offset="0.65" stop-color="#c9a76b"/>
+      <stop offset="1" stop-color="#f3dfb8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="480" fill="url(#sky)"/>
+  <circle cx="860" cy="330" r="90" fill="#fbe9c6" opacity="0.85"/>
+  <path d="M0 360 C 220 300 420 340 620 320 S 1000 290 1200 330 V480 H0Z" fill="#3c5a4a"/>
+  <path d="M0 400 C 260 370 520 410 760 390 S 1060 370 1200 395 V480 H0Z" fill="#2b4436"/>
+  <!-- chapel -->
+  <g fill="#f4efe4">
+    <rect x="470" y="300" width="260" height="110"/>
+    <polygon points="455,305 600,240 745,305"/>
+    <rect x="575" y="170" width="50" height="135"/>
+    <polygon points="566,175 600,70 634,175"/>
+  </g>
+  <g fill="#1f3a5f" opacity="0.85">
+    <rect x="585" y="350" width="30" height="60" rx="15"/>
+    <rect x="505" y="330" width="22" height="38" rx="11"/>
+    <rect x="545" y="330" width="22" height="38" rx="11"/>
+    <rect x="633" y="330" width="22" height="38" rx="11"/>
+    <rect x="673" y="330" width="22" height="38" rx="11"/>
+    <rect x="590" y="195" width="20" height="30" rx="10"/>
+  </g>
+  <rect x="0" y="408" width="1200" height="72" fill="#2b4436"/>
+</svg>
