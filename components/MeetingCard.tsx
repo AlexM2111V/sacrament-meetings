@@ -13,7 +13,7 @@ export default function MeetingCard({ meeting }: { meeting: SacramentMeeting }) 
   return (
     <Link
       href={`/meetings/${meeting.id}`}
-      className="block rounded-card border border-border bg-surface/40 p-5 transition-colors hover:border-accent"
+      className="block h-full rounded-card border border-border bg-surface/40 p-5 transition-colors hover:border-accent"
     >
       <p className="text-xs font-medium uppercase tracking-wide text-muted">
         {MEETING_TYPE_LABELS[meeting.meetingType]}
