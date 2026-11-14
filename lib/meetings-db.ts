@@ -22,7 +22,10 @@ const meetings: SacramentMeeting[] = [
     announcements: ['General Conference sessions broadcast at the meetinghouse'],
     openingHymn: { number: 2, title: 'The Spirit of God' },
     openingPrayer: 'Sister Laura Bennett',
-    wardBusiness: [],
+    wardBusiness: [
+      { description: 'Release: Sister Michelle Collet as Sunday school teacher' },
+      { description: 'Sustain: Brother Gerald Quispe as Sunday school teacher' },
+    ],
     stakeBusiness: false,
     sacramentHymn: { number: 169, title: 'As Now We Take the Sacrament' },
     speakers: [],
@@ -42,7 +45,7 @@ const meetings: SacramentMeeting[] = [
       { description: 'Release: Sister Amy Park as Primary pianist' },
       { description: 'Sustain: Sister Julia Moore as Primary pianist' },
     ],
-    stakeBusiness: false,
+    stakeBusiness: true,
     sacramentHymn: { number: 193, title: 'I Stand All Amazed' },
     speakers: [
       { name: 'Ethan Morales', topic: 'Prayer', type: 'speaker' },
@@ -124,10 +127,14 @@ const meetings: SacramentMeeting[] = [
     openingPrayer: 'Sister Claire Sorensen',
     wardBusiness: [],
     stakeBusiness: true,
+    stakeBusinessItems: [
+      { description: 'Sustaining of general and stake officers' },
+      { description: 'Call of Brother Daniel Reyes as stake high councilor' },
+    ],
     sacramentHymn: { number: 176, title: "'Tis Sweet to Sing the Matchless Love" },
     speakers: [
       { name: 'Elder Thomas Young', topic: 'Covenant Belonging', type: 'speaker' },
-      { name: 'Sister Felicia Newman', topic: 'The Convenant Path', type: 'speaker' },
+      { name: 'Sister Felicia Newman', topic: 'The Covenant Path', type: 'speaker' },
       { name: 'Stake Choir', topic: 'Come, Thou Fount of Every Blessing', type: 'musical-number' },
       { name: 'President Josh Thompson', topic: 'The Oath and Covenant of the Priesthood', type: 'speaker' },
       { name: 'President Mark Sorensen', topic: 'Gathering Israel', type: 'speaker' },

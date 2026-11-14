@@ -30,6 +30,7 @@ export interface SacramentMeeting {
   openingPrayer: string;
   wardBusiness: WardBusinessItem[];
   stakeBusiness: boolean;
+  stakeBusinessItems?: WardBusinessItem[]; // stake conferences only
   sacramentHymn: Hymn;
   speakers: SpeakerItem[];
   closingHymn: Hymn;

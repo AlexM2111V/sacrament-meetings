@@ -48,6 +48,8 @@ export function isSacramentMeeting(v: unknown): v is SacramentMeeting {
     Array.isArray(v.wardBusiness) &&
     v.wardBusiness.every(isWardBusinessItem) &&
     typeof v.stakeBusiness === "boolean" &&
+    (v.stakeBusinessItems === undefined ||
+      (Array.isArray(v.stakeBusinessItems) && v.stakeBusinessItems.every(isWardBusinessItem))) &&
     isHymn(v.sacramentHymn) &&
     Array.isArray(v.speakers) &&
     v.speakers.every(isSpeakerItem) &&

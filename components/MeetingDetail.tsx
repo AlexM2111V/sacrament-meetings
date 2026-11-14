@@ -41,7 +41,16 @@ export default function MeetingDetail({
   printMode?: boolean;
 }) {
   const announcements = meeting.announcements ?? [];
-  const hasBusiness = meeting.wardBusiness.length > 0 || meeting.stakeBusiness;
+  // Stake conferences list stake business items; sacrament meetings list ward business,
+  // with stake business (when set) as one of its bullet points.
+  const isStakeConference = meeting.meetingType === "stake";
+  const businessTitle = isStakeConference ? "Stake Business" : "Ward Business";
+  const businessItems = isStakeConference
+    ? (meeting.stakeBusinessItems ?? []).map((b) => b.description)
+    : [
+        ...meeting.wardBusiness.map((b) => b.description),
+        ...(meeting.stakeBusiness ? ["Stake business"] : []),
+      ];
   const isTestimony = meeting.meetingType === "testimony";
 
   return (
@@ -82,12 +91,11 @@ export default function MeetingDetail({
           <Row label="Opening Prayer">{meeting.openingPrayer}</Row>
         </dl>
 
-        {hasBusiness && (
+        {businessItems.length > 0 && (
           <div className="mt-3 border-b border-dotted border-border pb-3">
-            <p className="font-medium">Ward Business</p>
+            <p className="font-medium">{businessTitle}</p>
             <ul className="ml-5 list-disc text-sm">
-              {meeting.wardBusiness.map((b, i) => <li key={i}>{b.description}</li>)}
-              {meeting.stakeBusiness && <li>Stake business</li>}
+              {businessItems.map((item, i) => <li key={i}>{item}</li>)}
             </ul>
           </div>
         )}
