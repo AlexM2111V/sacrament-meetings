@@ -1,4 +1,10 @@
+import { neon } from '@neondatabase/serverless';
 import type { MeetingType, SacramentMeeting } from './types';
+import { isSacramentMeeting } from './validate';
+
+const sql = neon(process.env.DATABASE_URL!);
+
+export const ITEMS_PER_PAGE = 5;
 
 export const WARD_NAME = 'La Molina Ward';
 
@@ -12,167 +18,164 @@ export const MEETING_TYPE_LABELS: Record<MeetingType, string> = {
   general: 'General Conference',
 };
 
-const meetings: SacramentMeeting[] = [
-  {
-    id: 1,
-    date: '2026-10-04',
-    meetingType: 'general',
-    presiding: 'Bishop Daniel Reyes',
-    conducting: 'Brother Samuel Ortiz',
-    announcements: ['General Conference sessions broadcast at the meetinghouse'],
-    openingHymn: { number: 2, title: 'The Spirit of God' },
-    openingPrayer: 'Sister Laura Bennett',
-    wardBusiness: [
-      { description: 'Release: Sister Michelle Collet as Sunday school teacher' },
-      { description: 'Sustain: Brother Gerald Quispe as Sunday school teacher' },
-    ],
-    stakeBusiness: false,
-    sacramentHymn: { number: 169, title: 'As Now We Take the Sacrament' },
-    speakers: [],
-    closingHymn: { number: 19, title: 'We Thank Thee, O God, for a Prophet' },
-    closingPrayer: 'Brother Tyler Nguyen',
-  },
-  {
-    id: 2,
-    date: '2026-10-18',
-    meetingType: 'regular',
-    presiding: 'Bishop Daniel Reyes',
-    conducting: 'Brother Andrew Price',
-    announcements: ['Ward temple night Thursday, Oct 22'],
-    openingHymn: { number: 85, title: 'How Firm a Foundation' },
-    openingPrayer: 'Sister Olivia Turner',
-    wardBusiness: [
-      { description: 'Release: Sister Amy Park as Primary pianist' },
-      { description: 'Sustain: Sister Julia Moore as Primary pianist' },
-    ],
-    stakeBusiness: true,
-    sacramentHymn: { number: 193, title: 'I Stand All Amazed' },
-    speakers: [
-      { name: 'Ethan Morales', topic: 'Prayer', type: 'speaker' },
-      { name: 'Sister Rachel Kim', topic: 'Ministering', type: 'speaker' },
-      { name: 'Ward Choir', topic: 'Consider the Lilies', type: 'musical-number' },
-      { name: 'Brother James Walker', topic: 'Faith in Jesus Christ', type: 'speaker' },
-    ],
-    closingHymn: { number: 98, title: 'I Need Thee Every Hour' },
-    closingPrayer: 'Brother Carlos Diaz',
-  },
-  {
-    id: 3,
-    date: '2026-10-25',
-    meetingType: 'regular',
-    presiding: 'Bishop Daniel Reyes',
-    conducting: 'Brother Samuel Ortiz',
-    announcements: ['Trunk-or-treat Friday, Oct 30 at 6:00 PM'],
-    openingHymn: { number: 6, title: 'Redeemer of Israel' },
-    openingPrayer: 'Sister Maria Lopez',
-    wardBusiness: [],
-    stakeBusiness: true,
-    sacramentHymn: { number: 172, title: 'In Humility, Our Savior' },
-    speakers: [
-      { name: 'Sister Emily Ward', topic: 'The Book of Mormon', type: 'speaker' },
-      { name: 'Brother Lucas Hall', topic: 'Personal Revelation', type: 'speaker' },
-    ],
-    closingHymn: { number: 86, title: 'How Great Thou Art' },
-    closingPrayer: 'Sister Ava Mitchell',
-  },
-  {
-    id: 4,
-    date: '2026-11-01',
-    meetingType: 'testimony',
-    presiding: 'Bishop Daniel Reyes',
-    conducting: 'Bishop Daniel Reyes',
-    announcements: ['Tithing declaration appointments begin Nov 15'],
-    openingHymn: { number: 136, title: 'I Know That My Redeemer Lives' },
-    openingPrayer: 'Brother Noah Bishop',
-    wardBusiness: [{ description: 'Confirmation: Sophia Grant' }],
-    stakeBusiness: false,
-    sacramentHymn: { number: 181, title: 'Jesus of Nazareth, Savior and King' },
-    speakers: [],
-    closingHymn: { number: 152, title: 'God Be with You Till We Meet Again' },
-    closingPrayer: 'Sister Hannah Lee',
-  },
-  {
-    id: 5,
-    date: '2026-11-08',
-    meetingType: 'regular',
-    presiding: 'Bishop Daniel Reyes',
-    conducting: 'Brother Andrew Price',
-    announcements: [
-      'Ward Thanksgiving dinner Saturday, Nov 21 at 5:30 PM',
-      'Temple night Thursday, Nov 12',
-    ],
-    openingHymn: { number: 27, title: 'Praise to the Man' },
-    openingPrayer: 'Sister Grace Robinson',
-    wardBusiness: [
-      { description: 'Sustain: Brother Kevin Adams as Elders Quorum secretary' },
-    ],
-    stakeBusiness: false,
-    sacramentHymn: { number: 170, title: 'God, Our Father, Hear Us Pray' },
-    speakers: [
-      { name: 'Lily Carter', topic: 'Gratitude', type: 'speaker' },
-      { name: 'Sister Grace Robinson', topic: 'Counting Our Blessings', type: 'speaker' },
-      { name: 'Primary Children', topic: 'Come, Ye Thankful People', type: 'musical-number' },
-      { name: 'Brother David Hughes', topic: 'Thanksgiving and the Atonement', type: 'speaker' },
-    ],
-    closingHymn: { number: 94, title: 'Come, Ye Thankful People' },
-    closingPrayer: 'Brother Isaac Foster',
-  },
-  {
-    id: 6,
-    date: '2026-11-15',
-    meetingType: 'stake',
-    presiding: 'President Mark Sorensen',
-    conducting: 'President Mark Sorensen',
-    openingHymn: { number: 3, title: 'Now Let Us Rejoice' },
-    openingPrayer: 'Sister Claire Sorensen',
-    wardBusiness: [],
-    stakeBusiness: true,
-    stakeBusinessItems: [
-      { description: 'Sustaining of general and stake officers' },
-      { description: 'Call of Brother Daniel Reyes as stake high councilor' },
-    ],
-    sacramentHymn: { number: 176, title: "'Tis Sweet to Sing the Matchless Love" },
-    speakers: [
-      { name: 'Elder Thomas Young', topic: 'Covenant Belonging', type: 'speaker' },
-      { name: 'Sister Felicia Newman', topic: 'The Covenant Path', type: 'speaker' },
-      { name: 'Stake Choir', topic: 'Come, Thou Fount of Every Blessing', type: 'musical-number' },
-      { name: 'President Josh Thompson', topic: 'The Oath and Covenant of the Priesthood', type: 'speaker' },
-      { name: 'President Mark Sorensen', topic: 'Gathering Israel', type: 'speaker' },
-    ],
-    closingHymn: { number: 166, title: 'Abide with Me!' },
-    closingPrayer: 'Brother Henry Clark',
-  },
-];
-
 // ---- Queries ----
 
-/** All meetings, newest first. Pass an ISO date (YYYY-MM-DD) to return only meetings on that date. */
-export async function getMeetings(date?: string | null): Promise<SacramentMeeting[]> {
-  return meetings
-    .filter((m) => !date || m.date === date)
-    .sort((a, b) => b.date.localeCompare(a.date));
+// snake_case columns → the camelCase fields of SacramentMeeting. `date` comes back as text
+// so it stays an exact YYYY-MM-DD string instead of a timezone-shifted Date object.
+const MEETING_COLUMNS = sql.unsafe(`
+  id,
+  to_char(date, 'YYYY-MM-DD') AS "date",
+  meeting_type                AS "meetingType",
+  presiding,
+  conducting,
+  announcements,
+  opening_hymn                AS "openingHymn",
+  opening_prayer              AS "openingPrayer",
+  ward_business               AS "wardBusiness",
+  stake_business              AS "stakeBusiness",
+  stake_business_items        AS "stakeBusinessItems",
+  sacrament_hymn              AS "sacramentHymn",
+  speakers,
+  closing_hymn                AS "closingHymn",
+  closing_prayer              AS "closingPrayer"
+`);
+
+/** Checks every row from the database before the app treats it as a SacramentMeeting. */
+function toMeetings(rows: unknown[]): SacramentMeeting[] {
+  return rows.map((row) => {
+    if (!isSacramentMeeting(row)) {
+      const id = typeof row === 'object' && row !== null && 'id' in row ? row.id : 'unknown';
+      throw new Error(`Meeting row ${id} is malformed`);
+    }
+    return row;
+  });
 }
 
-export async function getMeetingById(id: number): Promise<SacramentMeeting | undefined> {
-  return meetings.find((m) => m.id === id);
+/**
+ * Matches the search text against presiding, conducting, meeting type (stored value or the
+ * label shown on the page), any speaker's name, or, for a full YYYY-MM-DD query, the exact
+ * date (so the API's existing `getMeetings(date)` call still filters by date).
+ */
+function searchCondition(query: string) {
+  const q = query.trim();
+  // Escape LIKE wildcards so a search for "50%" means the literal text.
+  const term = `%${q.replace(/[\\%_]/g, '\\$&')}%`;
+  // Users search by the label they see on the page ("Fast & Testimony Meeting",
+  // "Stake Conference"), not just the stored value ("testimony", "stake").
+  const needle = q.toLowerCase();
+  // Only a complete date filters by date; partial text like "1" or "2026" would match everything.
+  const dateMatch = isIsoDate(q) ? sql`OR date = ${q}::date` : sql``;
+  const typesByLabel = Object.entries(MEETING_TYPE_LABELS)
+    .filter(([, label]) => label.toLowerCase().includes(needle))
+    .map(([type]) => type);
+  return sql`
+    presiding ILIKE ${term}
+    OR conducting ILIKE ${term}
+    OR meeting_type ILIKE ${term}
+    OR meeting_type = ANY(${typesByLabel}::text[])
+    ${dateMatch}
+    OR EXISTS (
+      SELECT 1 FROM jsonb_array_elements(speakers) AS s
+      WHERE s->>'name' ILIKE ${term}
+    )
+  `;
 }
 
-export async function getMeetingByDate(date: string): Promise<SacramentMeeting | undefined> {
-  return meetings.find((m) => m.date === date);
+/**
+ * Meetings (newest first) matching the search text. An empty or null query matches all.
+ * With `currentPage`, returns that page of ITEMS_PER_PAGE; without it, returns every match
+ * (what GET /api/meetings promises).
+ */
+export async function getMeetings(
+  query: string | null = '',
+  currentPage?: number
+): Promise<SacramentMeeting[]> {
+  let pageClause = sql``;
+  if (currentPage !== undefined) {
+    const page = Number.isInteger(currentPage) && currentPage > 0 ? currentPage : 1;
+    pageClause = sql`LIMIT ${ITEMS_PER_PAGE} OFFSET ${(page - 1) * ITEMS_PER_PAGE}`;
+  }
+
+  const rows = await sql`
+    SELECT ${MEETING_COLUMNS}
+    FROM meetings
+    WHERE ${searchCondition(query ?? '')}
+    ORDER BY date DESC
+    ${pageClause}
+  `;
+  return toMeetings(rows);
+}
+
+/** Number of meetings matching the search text (across all pages). */
+export async function getMeetingsCount(query: string | null = ''): Promise<number> {
+  const rows = await sql`
+    SELECT COUNT(*) AS count FROM meetings
+    WHERE ${searchCondition(query ?? '')}
+  `;
+  return Number(rows[0].count);
+}
+
+/**
+ * A `?page=` value as a whole page number between 1 and the last page. Invalid values
+ * (-1, 1.5, "abc") become 1. Shared by the meetings page and the proxy so both agree.
+ */
+export function toPageNumber(raw: string | null | undefined, totalPages: number): number {
+  const page = Number(raw);
+  if (!Number.isInteger(page) || page < 1) return 1;
+  return Math.min(page, Math.max(totalPages, 1));
+}
+
+/** Number of pages getMeetings() can return for this search text. */
+export async function getMeetingsTotalPages(query: string | null = ''): Promise<number> {
+  return Math.ceil((await getMeetingsCount(query)) / ITEMS_PER_PAGE);
+}
+
+export async function getMeetingById(id: number): Promise<SacramentMeeting | null> {
+  const rows = await sql`SELECT ${MEETING_COLUMNS} FROM meetings WHERE id = ${id}`;
+  return toMeetings(rows)[0] ?? null;
+}
+
+export async function getMeetingByDate(date: string): Promise<SacramentMeeting | null> {
+  const rows = await sql`SELECT ${MEETING_COLUMNS} FROM meetings WHERE date = ${date}`;
+  return toMeetings(rows)[0] ?? null;
 }
 
 export async function getMeetingsByType(type: MeetingType): Promise<SacramentMeeting[]> {
-  return (await getMeetings()).filter((m) => m.meetingType === type);
+  const rows = await sql`
+    SELECT ${MEETING_COLUMNS} FROM meetings WHERE meeting_type = ${type} ORDER BY date DESC
+  `;
+  return toMeetings(rows);
 }
 
 export async function getMeetingIds(): Promise<number[]> {
-  return meetings.map((m) => m.id);
+  const rows = await sql`SELECT id FROM meetings ORDER BY id`;
+  return rows.map((row) => Number(row.id));
 }
 
 /** The meeting held on the most recent Sunday (today, if today is Sunday) in the ward's time zone. */
-export async function getCurrentMeeting(now: Date = new Date()): Promise<SacramentMeeting | undefined> {
+export async function getCurrentMeeting(now: Date = new Date()): Promise<SacramentMeeting | null> {
   return getMeetingByDate(getMostRecentSunday(todayIsoDate(now)));
 }
+
+// Mutation stubs — will be wired to the database in Week 04
+/* eslint-disable @typescript-eslint/no-unused-vars */
+export async function addMeeting(
+  data: Omit<SacramentMeeting, 'id'>
+): Promise<SacramentMeeting> {
+  throw new Error('addMeeting: database implementation coming in Week 04');
+}
+
+export async function updateMeeting(
+  id: number,
+  updates: Partial<SacramentMeeting>
+): Promise<SacramentMeeting | null> {
+  throw new Error('updateMeeting: database implementation coming in Week 04');
+}
+
+export async function deleteMeeting(id: number): Promise<boolean> {
+  throw new Error('deleteMeeting: database implementation coming in Week 04');
+}
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 // ---- Helpers ----
 
