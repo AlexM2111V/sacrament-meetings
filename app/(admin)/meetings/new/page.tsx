@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import CreateMeetingForm from "./create-meeting-form";
 
 export const metadata: Metadata = { title: "Create Meeting" };
 
-// Placeholder: the create meeting form is implemented in Week 04.
 export default function NewMeetingPage() {
-  return <h1 className="text-center text-2xl font-semibold">Create Meeting — Coming in Week 04</h1>;
+  return (
+    <>
+      <h1 className="text-center text-2xl font-semibold">Create Meeting</h1>
+      <CreateMeetingForm />
+    </>
+  );
 }

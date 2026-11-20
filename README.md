@@ -1,5 +1,33 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Week 04 submission notes
+
+The app uses route groups, so the files the assignment names as `app/meetings/...` live under
+`app/(public)/` or `app/(admin)/`. The URLs are the same.
+
+| Assignment path | File in this project |
+| --- | --- |
+| `lib/actions.ts` | `lib/actions.ts` (`createMeeting`, `updateMeeting`, `deleteMeeting`, `MeetingFormSchema`) |
+| Create form | `app/(admin)/meetings/new/create-meeting-form.tsx` (route `/meetings/new`) |
+| `app/meetings/[id]/edit/page.tsx` | `app/(admin)/meetings/[id]/edit/page.tsx` + `edit-meeting-form.tsx` |
+| `app/meetings/[id]/edit/not-found.tsx` | `app/(admin)/meetings/[id]/edit/not-found.tsx` |
+| `app/meetings/error.tsx` | `app/(public)/meetings/error.tsx` and `app/(admin)/meetings/error.tsx` (one boundary per route group; both use `components/MeetingsError.tsx`) |
+| Delete button | `components/DeleteMeetingButton.tsx`, on each card in `components/MeetingCard.tsx` |
+
+Notes on Next.js 16 behavior:
+
+- **`reset()` vs `retry()`:** Next.js 16 passes error boundaries both. `reset()` re-renders without
+  re-fetching, so "Try again" calls `router.refresh()` and `reset()` in one transition.
+- **404 status:** pages stream before they decide. `proxy.ts` checks `/meetings/[id]` first so a
+  missing meeting gets a real 404. The edit and delete pages call `notFound()` and render their
+  own `not-found.tsx`, as the assignment requires. Those responses have status 200 with a
+  `noindex` tag, because a status set in the proxy is overridden by the page render.
+- **Deleting without JavaScript:** the Delete button is a link to `/meetings/[id]/delete`, a
+  confirmation page, until JavaScript loads. After that it uses a confirm dialog.
+
+Environment: `DATABASE_URL` (Neon) and `APP_URL` (this app's own URL; meeting pages read
+through `/api/meetings`) are required in every deployed environment. See `.env.example`.
+
 ## Getting Started
 
 First, run the development server:

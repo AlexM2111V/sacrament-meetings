@@ -2,10 +2,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   getCurrentMeeting,
   getMeetingById,
-  getMeetingsCount,
-  ITEMS_PER_PAGE,
+  getMeetingsTotalPages,
   parseMeetingId,
   toPageNumber,
+  toTimeframe,
 } from "@/lib/meetings-db";
 
 // Runs before the page renders, so it can answer with real HTTP status codes. Pages
@@ -22,7 +22,8 @@ export async function proxy(request: NextRequest) {
     if (pages.length === 0) return NextResponse.next();
 
     const query = searchParams.get("query")?.trim() ?? "";
-    const totalPages = Math.ceil((await getMeetingsCount(query)) / ITEMS_PER_PAGE);
+    const when = toTimeframe(searchParams.get("when")); // pages are counted within the tab
+    const totalPages = await getMeetingsTotalPages(query, when);
     const page = String(toPageNumber(pages[0], totalPages));
     if (pages.length === 1 && pages[0] === page) return NextResponse.next();
 
@@ -41,10 +42,13 @@ export async function proxy(request: NextRequest) {
   // /meetings/new is the admin create page, not a meeting id.
   if (pathname === "/meetings/new") return NextResponse.next();
 
-  // /meetings/:id and /meetings/:id/edit: unknown or malformed ids get a real 404
-  // (Next renders the not-found page).
-  const segment = pathname.slice("/meetings/".length).replace(/\/edit$/, "");
-  const id = parseMeetingId(segment);
+  // /meetings/:id: unknown or malformed ids get a real 404 (Next renders the not-found page).
+  //
+  // /meetings/:id/edit and /meetings/:id/delete are deliberately not matched. Their pages call
+  // notFound() and render their own not-found.tsx, which the assignment requires. The cost is
+  // a 200 status (with a noindex tag) for those misses: the page render overrides a status
+  // set here, and rewriting to an unmatched route would show the app-wide 404 page instead.
+  const id = parseMeetingId(pathname.slice("/meetings/".length));
   if (id === null || !(await getMeetingById(id))) {
     return NextResponse.rewrite(new URL("/__meeting-not-found", request.url));
   }
@@ -53,5 +57,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/meetings", "/meetings/:id", "/meetings/:id/edit"],
+  matcher: ["/meetings", "/meetings/:id"],
 };

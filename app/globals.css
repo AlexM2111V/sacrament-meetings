@@ -11,6 +11,7 @@
   --primary: #1f3a5f;
   --primary-foreground: #ffffff;
   --accent: #86662b; /* 5.1:1 on background (WCAG AA for small text) */
+  --danger: #b42318; /* form errors and destructive actions; 6.3:1 on background */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +24,7 @@
     --primary: #8fb2dd;
     --primary-foreground: #0d1118;
     --accent: #d4b072;
+    --danger: #fda29b;
   }
 }
 
@@ -36,6 +38,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
+  --color-danger: var(--danger);
 
   --font-sans: var(--font-inter);
   --font-serif: var(--font-lora);
@@ -64,7 +67,10 @@
   }
 
   a:focus-visible,
-  button:focus-visible {
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }

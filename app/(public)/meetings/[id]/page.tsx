@@ -9,6 +9,7 @@ import {
   formatMeetingDate,
   getMeetingById,
   getMeetingIds,
+  MEETING_TYPE_LABELS,
   parseMeetingId,
 } from "@/lib/meetings-db";
 
@@ -22,11 +23,24 @@ async function loadMeeting(rawId: string) {
   return id === null ? undefined : getMeetingById(id);
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/meetings/[id]">): Promise<Metadata> {
-  const meeting = await loadMeeting((await params).id);
-  return { title: meeting ? formatMeetingDate(meeting.date) : "Meeting not found" };
+/**
+ * Cached so the title and description are prerendered into <head>. Uncached, they would
+ * stream into <body>, where crawlers that don't run JavaScript (and Lighthouse) miss them.
+ * The meeting Server Actions call revalidatePath(`/meetings/${id}`), which clears this.
+ */
+async function meetingMetadata(rawId: string): Promise<Metadata> {
+  "use cache";
+  const meeting = await loadMeeting(rawId);
+  if (!meeting) return { title: "Meeting not found" };
+  const date = formatMeetingDate(meeting.date);
+  return {
+    title: date,
+    description: `${MEETING_TYPE_LABELS[meeting.meetingType]} program for ${date}: presiding, conducting, hymns, prayers and speakers.`,
+  };
+}
+
+export async function generateMetadata({ params }: PageProps<"/meetings/[id]">): Promise<Metadata> {
+  return meetingMetadata((await params).id);
 }
 
 function MeetingSkeleton() {
@@ -57,6 +71,14 @@ async function MeetingContent({
     <>
       <div className="flex items-center justify-end gap-2 text-sm print:hidden">
         <div className="flex gap-2">
+          {!printMode && (
+            <Link
+              href={`/meetings/${meeting.id}/edit`}
+              className="rounded-md border border-border px-3 py-1.5 hover:bg-surface"
+            >
+              Edit meeting
+            </Link>
+          )}
           <Link
             href={printMode ? `/meetings/${meeting.id}` : `/meetings/${meeting.id}?print=1`}
             className="rounded-md border border-border px-3 py-1.5 hover:bg-surface"

@@ -118,14 +118,15 @@ export default function MeetingDetail({
           <dl className="mt-3">
             {meeting.speakers.map((s, i) =>
               s.type === "musical-number" ? (
+                // Song and performers are both optional; show whichever was entered.
                 <Row key={i} label="Musical Number">
-                  <em>{s.topic}</em>
-                  <Subtitle>{s.name}</Subtitle>
+                  {s.topic ? <em>{s.topic}</em> : s.name}
+                  {s.topic && s.name && <Subtitle>{s.name}</Subtitle>}
                 </Row>
               ) : (
                 <Row key={i} label="Speaker">
                   {s.name}
-                  <Subtitle>{s.topic}</Subtitle>
+                  {s.topic && <Subtitle>{s.topic}</Subtitle>}
                 </Row>
               ),
             )}
