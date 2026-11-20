@@ -9,8 +9,13 @@ import { isSacramentMeeting } from "./validate";
  * headers, so a forged Host header cannot redirect server-side fetches elsewhere.
  */
 function apiBaseUrl(): URL {
-  const configured = process.env.APP_URL;
-  if (configured) return new URL(configured); // throws on a malformed value
+  const configured = process.env.APP_URL?.trim();
+  if (configured) {
+    // Accept a bare host ("my-app.vercel.app"), the format Vercel uses for its own URL
+    // variables; new URL() would reject it. A value with http:// or https:// is used as is.
+    const withScheme = /^https?:\/\//i.test(configured) ? configured : `https://${configured}`;
+    return new URL(withScheme); // still throws on a truly malformed value
+  }
   return new URL(`http://localhost:${process.env.PORT ?? 3000}`);
 }
 
